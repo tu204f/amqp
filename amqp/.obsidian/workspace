@@ -1,0 +1,106 @@
+{
+  "main": {
+    "id": "63f1c708cace7e14",
+    "type": "split",
+    "children": [
+      {
+        "id": "53a3d031d3658fbf",
+        "type": "leaf",
+        "pinned": true,
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "AMQP/source.md",
+            "mode": "source"
+          },
+          "pinned": true
+        }
+      },
+      {
+        "id": "a6912724372c60d7",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "AMQP/source.md",
+            "mode": "preview"
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "9fe6b629e97fee56",
+    "type": "split",
+    "children": [
+      {
+        "id": "3134c82316564337",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e32f218f5281ebbc",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "bdc1e84b847c8d0f",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "20cecb485fe13d6b",
+    "type": "split",
+    "children": [
+      {
+        "id": "541bd780d1245967",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "64f1896317413fa4",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "AMQP/source.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "a6912724372c60d7",
+  "lastOpenFiles": [
+    "AMQP/source.md"
+  ]
+}
