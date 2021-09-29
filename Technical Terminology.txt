@@ -1,0 +1,69 @@
+Техническая терминология
+
+Эти термины имеют особое значение в контексте этого документа:
+
+AMQP command architecture:	Закодированная команда протокола проводного уровня, 
+							которая выполняет действия над состоянием архитектуры модели AMQ.
+AMQ model architecture: 	Логическая структура, представляющая ключевые сущности и семантику,
+							которые должны быть доступны посредством реализации сервера, 
+							совместимого с AMQP, чтобы клиент мог управлять состоянием 
+							сервера для достижения семантики, определенной в этой спецификации.
+Connection: 				Сетевое соединение, например соединение сокета TCP / IP.
+Channel: 					Двунаправленный поток связи между двумя партнерами AMQP. 
+							Каналы мультиплексированы, так что одно сетевое соединение 
+							может передавать несколько каналов.
+
+Client: The initiator of an AMQP connection or channel. AMQP is not symmetrical. Clients produce and consume messages while servers queue and route messages.
+
+Server: The process that accepts client connections and implements the AMQP message queueing and routing functions. Also known as "broker".
+
+Peer: Either party in an AMQP connection. An AMQP connection involves exactly two peers (one is the client, one is the server).
+
+Frame: A formally-defined package of connection data. Frames are always written and read contiguously - as a single unit - on the connection.
+
+Protocol class: A collection of AMQP commands (also known as Methods) that deal with a specific type of functionality
+
+Method: A specific type of AMQP command frame that passes instructions from one peer to the other.
+
+Content: Application data passed from client to server and from server to client. The term is synonymous with "message".
+
+Content header: A specific type of frame that describes a content's properties.
+
+Content body: A specific type of frame that contains raw application data. Content body frames are entirely opaque - the server does not examine or modify these in any way.
+
+Message: Synonymous with "content".
+
+Exchange: The entity within the server which receives messages from producer applications and optionally routes these to message queues within the server.
+
+Exchange type: The algorithm and implementation of a particular model of exchange. In contrast to the "exchange instance", which is the entity that receives and routes messages within the server.
+Message queue: A named entity that holds messages and forwards them to consumer applications.
+
+Binding: An entity that creates a relationship between a message queue and an exchange.
+
+Routing key: A virtual address that an exchange may use to decide how to route a specific message.
+
+Durable: A server resource that survives a server restart.
+
+Transient: A server resource or message that is wiped or reset after a server restart.
+
+Persistent: A message that the server holds on reliable disk storage and MUST NOT lose after a server restart.
+
+Consumer: A client application that requests messages from a message queue.
+
+Producer: A client application that publishes messages to an exchange.
+
+Virtual host: A collection of exchanges, message queues and associated objects. Virtual hosts are independent server domains that share a common authentication and encryption environment.
+
+Assertion: A condition that must be true for processing to continue. 
+
+Exception: A failed assertion, handled by closing either the Channel or the Connection. These terms have no special significance within the context of AMQP:
+
+Topic: Usually a means of distributing messages; AMQP implements topics using one or more types of exchange.
+
+Subscription: Usually a request to receive data from topics; AMQP implements subscriptions as message queues and bindings.
+
+Service: Usually synonymous with server. AMQP uses "server" to conform with IETF standard nomenclature.
+
+Broker: synonymous with server. AMQP uses the terms "client" and "server" to conform with IETF standard nomenclature.
+
+Router: Sometimes used to describe the actions of an exchange. Exchanges can also act as message end-points, and "router" has special significance in the network domain, so AMQP does not use it.

@@ -65,7 +65,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 338,
+    "collapsed": true
   },
   "right": {
     "id": "20cecb485fe13d6b",
@@ -99,7 +100,7 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "a6912724372c60d7",
+  "active": "53a3d031d3658fbf",
   "lastOpenFiles": [
     "AMQP/source.md"
   ]

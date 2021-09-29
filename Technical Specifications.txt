@@ -1,0 +1,132 @@
+IANA Assigned Port Number.
+
+	Стандартный номер порта AMQP был назначен IANA как 5672 как для TCP, 
+	так и для UDP. UDP порт зарезервирован для использования в будущих 
+	реализациях многоадресной передачи.
+
+AMQP Wire-Level Format
+Formal Protocol Grammar
+
+	Мы предоставляем полную грамматику AMQP (она предоставляется для справки, 
+	и вы можете найти ее подробнее) интересно перейти к следующим разделам, 
+	в которых подробно описаны различные типы фреймов и их форматы):
+	
+	amqp 				= protocol-header *amqp-unit 
+ 
+	protocol-header 	= literal-AMQP protocol-id protocol-version 
+	literal-AMQP 		= %d65.77.81.80 ; "AMQP" 
+	protocol-id 		= %d0 ; Must be 0 
+	protocol-version 	= %d0.9.1 ; 0-9-1 
+ 
+	method 				= method-frame [ content ] 
+	method-frame 		= %d1 frame-properties method-payload frame-end 
+	frame-properties 	= channel payload-size 
+	channel 			= short-uint ; Non-zero 
+	payload-size 		= long-uint 
+	method-payload 		= class-id method-id *amqp-field 
+	class-id 			= %x00.01-%xFF.FF 
+	method-id 			= %x00.01-%xFF.FF 
+	amqp-field 			= BIT	/ OCTET 
+								/ short-uint / long-uint / long-long-uint 
+								/ short-string / long-string 
+								/ timestamp 
+								/ field-table 
+	short-uint 			= 2*OCTET 
+	long-uint 			= 4*OCTET 
+	long-long-uint 		= 8*OCTET 
+	short-string 		= OCTET *string-char ; length + content 
+	string-char 		= %x01 .. %xFF 
+	long-string 		= long-uint *OCTET ; length + content 
+	timestamp 			= long-long-uint ; 64-bit POSIX 
+	field-table 		= long-uint *field-value-pair 
+	field-value-pair 	= field-name field-value 
+	field-name 			= short-string
+	field-value 		= 't' boolean
+						/ 'b' short-short-int
+						/ 'B' short-short-uint
+						/ 'U' short-int
+						/ 'u' short-uint
+						/ 'I' long-int
+						/ 'i' long-uint
+						/ 'L' long-long-int
+						/ 'l' long-long-uint
+						/ 'f' float
+						/ 'd' double
+						/ 'D' decimal-value
+						/ 's' short-strin
+						/ 'S' long-string
+						/ 'A' field-array
+						/ 'T' timestamp
+						/ 'F' field-table
+						/ 'V' ; no field 
+	boolean 			= OCTET ; 0 = FALSE, else TRUE 
+	short-short-int 	= OCTET 
+	short-short-uint 	= OCTET 
+	short-int 			= 2*OCTET 
+	long-int 			= 4*OCTET 
+	long-long-int 		= 8*OCTET 
+	float 				= 4*OCTET ; IEEE-754 
+	double 				= 8*OCTET ; rfc1832 XDR double
+	decimal-value 		= scale long-uint
+	scale 				= OCTET ; number of decimal digits
+	field-array 		= long-int *field-value ; array of values
+	frame-end 			= %xCE 
+	content 			= %d2 content-header *content-body 
+	content-header 		= frame-properties header-payload frame-end 
+	header-payload 		= content-class content-weight content-body-size 
+					      property-flags property-list 
+	content-class 		= OCTET 
+	content-weight 		= %x00 
+	content-body-size 	= long-long-uint 
+	property-flags 		= 15*BIT %b0 / 15*BIT %b1 property-flags 
+	property-list 		= *amqp-field 
+	content-body 		= %d3 frame-properties body-payload frame-end 
+	body-payload 		= *OCTET 
+ 
+	heartbeat 			= %d8 %d0 %d0 frame-en
+
+Мы предоставляем полную грамматику AMQP (она предоставляется для справки, 
+и вы можете найти ее подробнее) интересно перейти к следующим разделам,
+в которых предлагаем следующие типы фреймов и форматы:
+ -> Название правила - это просто само название.
+ -> Терминалы обозначаются одним или несколькими числовыми символами 
+	с базовой интерпретацией тех символы, обозначенные как 'd' или 'x'.
+ -> Правило может определять простую упорядоченную строку значений, 
+	перечисляя последовательность имен правил.
+ -> Диапазон альтернативных числовых значений можно указать компактно,
+	используя тире ("-"), чтобы указать диапазон альтернативных значений.
+ -> Элементы, заключенные в круглые скобки, рассматриваются как один элемент,
+	содержимое которого строго упорядочено.
+ -> Элементы, разделенные косой чертой ("/"), являются альтернативными.
+ -> Оператор «*» перед элементом указывает на повторение. 
+	Полная форма: «<a> * <b> элемент», где <a> и <b> - необязательные 
+	десятичные значения, указывающие как минимум <a> и не более <b> 
+	вхождений элемент.
+ -> Правило формы: «<n> элемент» эквивалентно <n> * <n> element.
+ -> Квадратные скобки заключают необязательную последовательность элементов.
+ 
+Protocol Header (Заголовок протокола)
+
+Клиент ДОЛЖЕН (MUST) начать новое соединение, отправив заголовок протокола. Это 8-октетная последовательность:
++---+---+---+---+---+---+---+---+
+|'A'|'M'|'Q'|'P'| 0 | 0 | 9 | 1 |
++---+---+---+---+---+---+---+---+
+ 8 octet
+ 
+Заголовок протокола состоит из заглавных букв «AMQP», за которыми следует константа %d0, затем:
+  1. Основная версия протокола, используемая в соответствии с разделом 1.4.2.
+  2. Дополнительная версия протокола, используемая в соответствии с п. 1.4.2.
+  3. Ревизия протокола, используемая в соответствии с п. 1.4.2.
+  
+Модель согласования протокола совместима с существующими протоколами, такими как HTTP, 
+которые инициируют соединение с постоянной текстовой строкой и с брандмауэрами, которые
+обнюхивают начало протокола, чтобы решить какие правила к нему применить.
+
+Клиент и сервер согласовывают протокол и версию следующим образом:
+
+Клиент открывает новое соединение сокета с сервером AMQP и отправляет заголовок протокола.
+	-> Клиент открывает новое соединение сокета с сервером AMQP и 
+	отправляет заголовок протокола.
+	-> Сервер либо принимает, либо отклоняет заголовок протокола. Если он отклоняет заголовок
+	протокола, записывает действительный заголовок протокола в сокет, а затем закрывает сокет.
+	-> В противном случае он оставляет сокет открытым и соответствующим образом реализует протокол.
