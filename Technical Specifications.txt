@@ -65,10 +65,13 @@ Formal Protocol Grammar
 	short-int 			= 2*OCTET 
 	long-int 			= 4*OCTET 
 	long-long-int 		= 8*OCTET 
+	
 	float 				= 4*OCTET ; IEEE-754 
 	double 				= 8*OCTET ; rfc1832 XDR double
+	
 	decimal-value 		= scale long-uint
 	scale 				= OCTET ; number of decimal digits
+	
 	field-array 		= long-int *field-value ; array of values
 	frame-end 			= %xCE 
 	content 			= %d2 content-header *content-body 
@@ -83,7 +86,7 @@ Formal Protocol Grammar
 	content-body 		= %d3 frame-properties body-payload frame-end 
 	body-payload 		= *OCTET 
  
-	heartbeat 			= %d8 %d0 %d0 frame-en
+	heartbeat 			= %d8 %d0 %d0 frame-end
 
 Мы предоставляем полную грамматику AMQP (она предоставляется для справки, 
 и вы можете найти ее подробнее) интересно перейти к следующим разделам,

@@ -1,0 +1,153 @@
+bit				bit
+class­id		short
+consumer­tag	shortstr
+delivery­tag	longlong 
+exchange­name	shortstr 
+long 			long 
+longlong 		longlong
+longstr 		longstr 
+message­count 	long 
+method­id 		short
+no­ack			bit
+no­local 		bit
+no­wait 		bit
+octet 			octet 
+path 			shortstr 
+peer­properties table
+queue­name 		shortstr
+redelivered 	bit 
+reply­code 		short
+reply­text 		shortstr
+short 			short
+shortstr 		shortstr
+table 			table 
+timestamp 		timestamp
+
+	AMQP_TYPE_BOOLEAN			= 't'; // boolean				// octet
+	AMQP_TYPE_SHORT_SHORT_INT 	= 'b'; // short-short-int		// octet
+	AMQP_TYPE_SHORT_SHORT_UINT	= 'B'; // short-short-uint		// octet
+	AMQP_TYPE_SHORT_INT			= 'U'; // short-int				// 2 * octet
+	AMQP_TYPE_SHORT_UINT		= 'u'; // short-uint			// 2 * octet
+	AMQP_TYPE_LONG_INT			= 'I'; // long-int				// 4 * octet
+	AMQP_TYPE_LONG_UINT			= 'i'; // long-uint				// 4 * octet
+	AMQP_TYPE_LONG_LONG_INT		= 'L'; // long-long-int			// 8 * octet
+	AMQP_TYPE_LONG_LONG_UINT	= 'l'; // long-long-uint		// 8 * octet
+	AMQP_TYPE_FLOAT				= 'f'; // float					// 4 * octet
+	AMQP_TYPE_DOUBLE			= 'd'; // double				// 8 * octet
+	AMQP_TYPE_DECIMAL_VALUE		= 'D'; // decimal-value			// octet + 4 * octet
+	AMQP_TYPE_SHORT_STRING		= 's'; // short-string			// array [octet] of AnsiChar
+	AMQP_TYPE_LONG_STRING		= 'S'; // long-string			// array [4*OCTET] of AnsiChar
+	AMQP_TYPE_FIELD_ARRAY		= 'A'; // field-array			// 
+	AMQP_TYPE_TIMESTAMP			= 'T'; // timestamp				// long-long-uint
+	AMQP_TYPE_FIELD_TABLE		= 'F'; // field-table			// 
+	AMQP_TYPE_NO_FIELD			= 'V'; // no field
+	
+bit	  			
+long 
+longlong
+longstr 
+octet 
+short
+shortstr 
+table 
+timestamp
+
+
+AMQP_TYPE_BOOLEAN	= 't';				
+	->boolean 		= OCTET ; 0 = FALSE, else TRUE 
+
+AMQP_TYPE_SHORT_SHORT_INT 	= 'b';		
+	->short-short-int = OCTET
+
+AMQP_TYPE_SHORT_SHORT_UINT	= 'B';	
+	->short-short-uint 	= OCTET 
+
+AMQP_TYPE_SHORT_INT			= 'U'; // short-int				
+	->short-int 			= 2*OCTET 
+	
+AMQP_TYPE_SHORT_UINT		= 'u'; // short-uint			
+	->short-uint 			= 2*OCTET
+	
+AMQP_TYPE_LONG_INT			= 'I'; // long-int				
+	->long-int 			= 4*OCTET
+
+AMQP_TYPE_LONG_UINT			= 'i'; // long-uint				
+	->long-uint 			= 4*OCTET
+
+AMQP_TYPE_LONG_LONG_INT		= 'L'; // long-long-int			
+	->long-long-int 		= 8*OCTET 
+
+AMQP_TYPE_LONG_LONG_UINT	= 'l'; // long-long-uint		
+	->long-long-uint 		= 8*OCTET
+
+AMQP_TYPE_FLOAT				= 'f'; // float					
+	float 				= 4*OCTET ; IEEE-754 
+
+AMQP_TYPE_DOUBLE			= 'd'; // double				
+	double 				= 8*OCTET ; rfc1832 XDR double
+	
+AMQP_TYPE_DECIMAL_VALUE		= 'D'; // decimal-value			
+	decimal-value 		= scale long-uint
+	long-uint 			= 4*OCTET
+	scale 				= OCTET ; number of decimal digits
+
+AMQP_TYPE_SHORT_STRING		= 's'; // short-string			
+	
+	short-string 		= OCTET *string-char
+	string-char 		= %x01 .. %xFF
+	--
+	length + content 
+	
+
+AMQP_TYPE_LONG_STRING		= 'S'; // long-string
+	long-uint *OCTET ; length + content
+
+
+AMQP_TYPE_FIELD_ARRAY		= 'A'; // field-array
+	long-int *field-value ; array of values
+
+
+AMQP_TYPE_TIMESTAMP			= 'T'; // timestamp				
+	long-long-uint ; 64-bit POSIX 
+
+AMQP_TYPE_FIELD_TABLE		= 'F'; // field-table			
+	long-uint *field-value-pair 
+
+AMQP_TYPE_NO_FIELD			= 'V'; // no field
+
+
+
+content = 
+	%d2 
+	content-header =
+		frame-properties
+			channel
+				short-uint
+					2*OCTET	
+				Non-zero
+			payload-size
+				long-uint
+					4*OCTET
+		header-payload
+			content-class
+				OCTET 
+			content-weight
+				%x00 
+			content-body-size 
+				long-long-uint
+			property-flags
+					15*BIT %b0 / 
+					15*BIT %b1 property-flags 
+			property-list
+			
+		frame-end
+			%xCE
+	*content-body
+		%d3 
+		frame-properties
+			channel 
+			payload-size 		
+		body-payload
+			*OCTET 
+		frame-end
+			%xCE
